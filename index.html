@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estúdio — plataforma de design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===================== TELA DE LOGIN ===================== -->
+<section id="screen-login" class="screen screen--center">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand__stack" aria-hidden="true">
+        <span class="chip chip--a"></span>
+        <span class="chip chip--b"></span>
+        <span class="chip chip--c"></span>
+      </div>
+      <h1 class="brand__name">Estúdio</h1>
+    </div>
+    <p class="login-card__subtitle">Entre para continuar seus projetos.</p>
+
+    <form id="login-form" class="login-form" autocomplete="off">
+      <label class="field">
+        <span class="field__label">Usuário</span>
+        <input type="text" id="login-user" placeholder="demo" required>
+      </label>
+      <label class="field">
+        <span class="field__label">Senha</span>
+        <input type="password" id="login-pass" placeholder="••••••" required>
+      </label>
+      <p id="login-error" class="login-error" hidden>Usuário ou senha incorretos.</p>
+      <button type="submit" class="btn btn--primary btn--block">Entrar</button>
+    </form>
+    <p class="login-hint">Acesso de demonstração: <code>demo</code> / <code>1234</code></p>
+  </div>
+</section>
+
+<!-- ===================== DASHBOARD ===================== -->
+<section id="screen-dashboard" class="screen" hidden>
+  <header class="topbar">
+    <div class="brand brand--sm">
+      <div class="brand__stack" aria-hidden="true">
+        <span class="chip chip--a"></span><span class="chip chip--b"></span><span class="chip chip--c"></span>
+      </div>
+      <span class="brand__name">Estúdio</span>
+    </div>
+    <div class="topbar__actions">
+      <span id="dash-user-label" class="topbar__user"></span>
+      <button id="btn-logout" class="btn btn--ghost">Sair</button>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <div class="dashboard__head">
+      <div>
+        <h2>Seus projetos</h2>
+        <p class="muted">Continue de onde parou ou comece algo novo.</p>
+      </div>
+      <button id="btn-new-project" class="btn btn--primary">+ Criar novo projeto</button>
+    </div>
+
+    <div id="project-list" class="project-grid"></div>
+
+    <div id="empty-state" class="empty-state" hidden>
+      <div class="brand__stack brand__stack--lg" aria-hidden="true">
+        <span class="chip chip--a"></span><span class="chip chip--b"></span><span class="chip chip--c"></span>
+      </div>
+      <h3>Nenhum projeto ainda</h3>
+      <p class="muted">Crie o primeiro para ver sua pilha de camadas ganhar vida.</p>
+    </div>
+  </main>
+</section>
+
+<!-- ===================== EDITOR ===================== -->
+<section id="screen-editor" class="screen screen--editor" hidden>
+  <header class="editor-topbar">
+    <button id="btn-back-dashboard" class="btn btn--ghost btn--icon" title="Voltar">←</button>
+    <input id="project-name-input" class="project-name-input" value="Sem título">
+    <span id="save-status" class="save-status">Salvo</span>
+    <div class="editor-topbar__actions">
+      <button id="btn-export" class="btn btn--ghost">Exportar PNG</button>
+      <button id="btn-save" class="btn btn--primary">Salvar</button>
+    </div>
+  </header>
+
+  <div class="editor-body">
+    <!-- Barra de ferramentas -->
+    <aside class="toolbar">
+      <button class="tool-btn is-active" data-tool="select" title="Selecionar (V)">▲</button>
+      <button class="tool-btn" data-tool="pen" title="Desenho livre (P)">✎</button>
+      <button class="tool-btn" data-tool="rect" title="Retângulo (R)">▭</button>
+      <button class="tool-btn" data-tool="circle" title="Círculo (C)">◯</button>
+      <button class="tool-btn" data-tool="text" title="Texto (T)">T</button>
+      <label class="tool-btn tool-btn--upload" title="Importar imagem">
+        ⭱
+        <input type="file" id="image-upload" accept="image/*" hidden>
+      </label>
+      <div class="toolbar__divider"></div>
+      <button id="btn-delete-el" class="tool-btn tool-btn--danger" title="Excluir selecionado (Del)">🗑</button>
+    </aside>
+
+    <!-- Canvas -->
+    <div class="canvas-wrap">
+      <canvas id="main-canvas" width="1000" height="640"></canvas>
+    </div>
+
+    <!-- Painel direito: propriedades + camadas -->
+    <aside class="right-panel">
+      <div class="panel">
+        <h3 class="panel__title">Propriedades</h3>
+        <div id="props-empty" class="muted panel__empty">Selecione um elemento para editar.</div>
+        <div id="props-fields" hidden>
+          <label class="field">
+            <span class="field__label">Cor</span>
+            <input type="color" id="prop-color" value="#7C5CFF">
+          </label>
+          <label class="field">
+            <span class="field__label">Largura <span id="prop-w-val" class="mono"></span></span>
+            <input type="range" id="prop-width" min="4" max="900" step="1">
+          </label>
+          <label class="field">
+            <span class="field__label">Altura <span id="prop-h-val" class="mono"></span></span>
+            <input type="range" id="prop-height" min="4" max="700" step="1">
+          </label>
+          <label class="field">
+            <span class="field__label">Opacidade <span id="prop-op-val" class="mono"></span></span>
+            <input type="range" id="prop-opacity" min="0" max="100" step="1">
+          </label>
+          <label class="field" id="prop-stroke-field">
+            <span class="field__label">Espessura do traço <span id="prop-stroke-val" class="mono"></span></span>
+            <input type="range" id="prop-stroke" min="1" max="40" step="1">
+          </label>
+          <button id="btn-edit-text" class="btn btn--ghost btn--block" hidden>Editar texto…</button>
+        </div>
+      </div>
+
+      <div class="panel panel--grow">
+        <h3 class="panel__title">Camadas</h3>
+        <ul id="layers-list" class="layers-list"></ul>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
